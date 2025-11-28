@@ -1,0 +1,369 @@
+<!--
+Author: Omesh Verma
+Project: Online Learning Platform (single-file demo)
+Based on uploaded assignment 'Capstone Project - Responsive Web Design'
+
+
+Features implemented (per assignment):
+- Semantic HTML5 structure: header, nav, main, section, article, aside, footer
+- Hero/banner with CTA and keyframe animation
+- Course cards displayed with CSS Grid (responsive)
+- Testimonials, Pricing, and Contact form with labels & accessibility
+- CSS variables, Flexbox & Grid, two breakpoints (>=1024px, ~768px, <=600px)
+- Subtle hover effects, transitions, and an animation
+- Images use placeholder SVGs with meaningful alt text
+- Skip to main content link and ARIA attributes
+
+
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Learnly — Online Learning Platform</title>
+  <meta name="description" content="Responsive demo of an Online Learning Platform — courses, testimonials, pricing and contact form." />
+
+  <!-- Google Fonts (declared but will work when online) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#94a3b8;
+      --accent:#6ee7b7;
+      --primary:#60a5fa;
+      --glass: rgba(255,255,255,0.04);
+      --radius:14px;
+      --max-width:1200px;
+      --gap:1.25rem;
+      --root-font:16px;
+    }
+    html{font-size:var(--root-font);}    
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: linear-gradient(180deg,#071026 0%, #071a2a 60%);
+      color:#e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      padding:2rem 1rem;
+    }
+
+    .container{max-width:var(--max-width);margin:0 auto}
+
+    a.skip-link{position:absolute;left:1rem;top:1rem;background:#fff;color:#071026;padding:0.5rem 0.75rem;border-radius:8px;z-index:100;transform:translateY(-120%);transition:transform .18s ease}
+    a.skip-link:focus{transform:translateY(0)}
+
+    header.site-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 0}
+    .brand{display:flex;align-items:center;gap:.75rem}
+    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-weight:800;color:#021124}
+    nav.primary{display:flex;gap:1rem;align-items:center}
+    nav.primary a{color:var(--muted);text-decoration:none;font-weight:600}
+    .cta{background:linear-gradient(90deg,var(--accent),var(--primary));padding:.6rem .9rem;border-radius:10px;color:#021124;text-decoration:none;font-weight:700}
+
+    /* mobile nav toggle */
+    .mobile-toggle{display:none;background:transparent;border:0;color:var(--muted)}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:2rem;align-items:center;padding:2rem 0}
+    .hero .panel{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:2rem;border-radius:var(--radius);backdrop-filter: blur(6px)}
+    .super{font-size:.9rem;color:var(--accent);letter-spacing:.08em;font-weight:700}
+    .hero h1{font-size:2rem;margin:.3rem 0 0.5rem}
+    .hero p{color:var(--muted);margin:0 0 1rem}
+    .hero .actions{display:flex;gap:1rem;align-items:center}
+
+    .hero-card{padding:1rem;border-radius:12px;background:linear-gradient(180deg,#041126 0%, #072036 100%);box-shadow: 0 6px 30px rgba(2,6,23,0.6)}
+
+    /* courses grid */
+    .section-courses{padding:2rem 0}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
+    .card{background:var(--card);padding:1rem;border-radius:12px;border:1px solid rgba(255,255,255,0.03);transition:transform .22s ease, box-shadow .22s ease}
+    .card:hover{transform:translateY(-6px);box-shadow:0 12px 30px rgba(2,6,23,0.6)}
+    .card img{width:100%;height:150px;object-fit:cover;border-radius:8px}
+    .card h3{margin:.5rem 0 .25rem}
+    .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem}
+
+    /* testimonials & pricing layout */
+    .two-col{display:grid;grid-template-columns:1fr 360px;gap:var(--gap);align-items:start}
+    .testimonial{background:var(--glass);padding:1rem;border-radius:12px}
+    blockquote{margin:0;color:var(--muted);}
+
+    /* pricing cards */
+    .price-grid{display:flex;flex-direction:column;gap:1rem}
+    .price{padding:1rem;border-radius:10px;background:#071223;border:1px solid rgba(255,255,255,0.03)}
+    .price h4{margin:0 0.25rem 0.5rem}
+    .price .buy{margin-top:.75rem;display:inline-block;padding:.5rem .75rem;border-radius:8px;text-decoration:none;font-weight:700;background:linear-gradient(90deg,var(--primary),var(--accent));color:#021124}
+
+    /* contact */
+    form.contact{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    label{font-size:.85rem;color:var(--muted)}
+    input,textarea,select{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:.65rem;border-radius:8px;color:inherit}
+    textarea{grid-column:1/-1;min-height:120px}
+    .submit{grid-column:1/-1;display:flex;justify-content:flex-end}
+
+    footer.site-footer{padding:2rem 0;color:var(--muted)}
+    .socials{display:flex;gap:.6rem}
+
+    /* small bits */
+    .tag{display:inline-block;padding:.25rem .5rem;border-radius:999px;background:rgba(255,255,255,0.03);font-weight:600;color:var(--accent);}
+
+    /* animations */
+    @keyframes floatIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .hero .panel{animation:floatIn .7s ease both}
+
+    /* breakpoints */
+    @media (max-width:1024px){
+      .hero{grid-template-columns:1fr}
+      .two-col{grid-template-columns:1fr}
+      .grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:768px){
+      body{padding:1rem}
+      nav.primary{display:none}
+      .mobile-toggle{display:block}
+      .grid{grid-template-columns:1fr}
+      form.contact{grid-template-columns:1fr}
+      .hero{padding:1rem 0}
+    }
+
+    /* accessibility focus styles */
+    a:focus,button:focus,input:focus,textarea:focus{outline:2px dashed var(--accent);outline-offset:3px}
+
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <div class="container">
+    <header class="site-header" role="banner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">L</div>
+        <div>
+          <div style="font-weight:800">Learnly</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:2px">Learn anything. Anywhere.</div>
+        </div>
+      </div>
+
+      <nav class="primary" role="navigation" aria-label="Primary">
+        <a href="#courses">Courses</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#contact">Contact</a>
+        <a class="cta" href="#signup">Sign up</a>
+      </nav>
+
+      <button class="mobile-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">☰</button>
+    </header>
+
+    <main id="main" role="main">
+      <section class="hero">
+        <article class="panel">
+          <div class="super">Online Learning Platform</div>
+          <h1>Upskill with short, practical courses — curated for rapid learning</h1>
+          <p>Courses, mentorship, assessments and certificates — built with responsive, accessible UI in mind.</p>
+          <div class="actions">
+            <a class="cta" href="#courses">Browse Courses</a>
+            <a href="#pricing" style="color:var(--muted);text-decoration:none;padding:.5rem .75rem;border-radius:8px;border:1px solid rgba(255,255,255,0.04)">View Pricing</a>
+          </div>
+        </article>
+
+        <aside class="hero-card" aria-labelledby="why-title">
+          <h3 id="why-title">Why Learnly?</h3>
+          <p style="color:var(--muted)">Short paths, expert instructors, and peer community. Pick a skill and finish a course in weeks.</p>
+          <ul style="list-style:none;padding:0;margin:.75rem 0 0;">
+            <li class="tag">Flexible</li>
+            <li class="tag" style="margin-left:.5rem">Certifications</li>
+            <li class="tag" style="margin-left:.5rem">Community</li>
+          </ul>
+
+          <div style="margin-top:1rem;color:var(--muted);font-size:.9rem">
+            <strong>Featured:</strong>
+            <div style="margin-top:.5rem">Full-Stack Web Development • Data Science • Machine Learning</div>
+          </div>
+        </aside>
+      </section>
+
+      <section id="courses" class="section-courses" aria-labelledby="courses-title">
+        <h2 id="courses-title">Popular Courses</h2>
+        <p style="color:var(--muted);margin-top:.25rem">Hands-on short courses — built with real projects and assessments.</p>
+
+        <div class="grid" role="list">
+          <!-- Course 1 -->
+          <article class="card" role="listitem" aria-labelledby="c1">
+            <img src="https://codemithra.com/wp-content/uploads/2024/07/What-is-a-Full-Stack-Developer-jpg.webp" width='800' height='450'><rect width='100%' height='100%' fill='%23071a2a'/><text x='50%' y='50%' fill='%23fff' font-size='24' font-family='Arial' text-anchor='middle'>Web Dev</text></svg>" 
+            <h3 id="c1">Full-Stack Web Development</h3>
+            <div class="meta"><span>12 modules</span><span>4.7 ★</span></div>
+            <p style="color:var(--muted);font-size:.94rem">Build projects using HTML, CSS, JS and a backend. Deploy a portfolio-ready app.</p>
+          </article>
+
+          <!-- Course 2 -->
+          <article class="card" role="listitem" aria-labelledby="c2">
+            <img src="https://chanakyauniversity.edu.in/wp-content/uploads/2025/03/Data-Science-1.jpg" width='800' height='450'><rect width='100%' height='100%' fill='%23071a2a'/><text x='50%' y='50%' fill='%23fff' font-size='24' font-family='Arial' text-anchor='middle'>Data</text></svg>" 
+            <h3 id="c2">Intro to Data Science</h3>
+            <div class="meta"><span>8 modules</span><span>4.6 ★</span></div>
+            <p style="color:var(--muted);font-size:.94rem">Learn Python, data wrangling, visualization, and model basics through projects.</p>
+          </article>
+
+          <!-- Course 3 -->
+          <article class="card" role="listitem" aria-labelledby="c3">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTM2V04_h2S1Nev_Au0b3yWHc8wG5n8a-n-Zg&s" width='800' height='450'><rect width='100%' height='100%' fill='%23071a2a'/><text x='50%' y='50%' fill='%23fff' font-size='24' font-family='Arial' text-anchor='middle'>ML</text></svg>" 
+            <h3 id="c3">Practical Machine Learning</h3>
+            <div class="meta"><span>10 modules</span><span>4.8 ★</span></div>
+            <p style="color:var(--muted);font-size:.94rem">Hands-on ML workflows: preprocessing, training, evaluation and deployment basics.</p>
+          </article>
+
+        </div>
+      </section>
+
+      <section id="testimonials" style="padding:1.5rem 0" aria-labelledby="test-title">
+        <h2 id="test-title">What learners say</h2>
+        <div class="two-col">
+          <div>
+            <article class="testimonial">
+              <blockquote>"The Web Dev course helped me build my first production app. Instructor feedback was excellent."</blockquote>
+              <div style="margin-top:.5rem;font-weight:700">— Priya R., Frontend Developer</div>
+            </article>
+
+            <article class="testimonial" style="margin-top:1rem">
+              <blockquote>"Clear modules and project-based learning. I landed an internship after the Data Science course."</blockquote>
+              <div style="margin-top:.5rem;font-weight:700">— Akash S., Data Intern</div>
+            </article>
+          </div>
+
+          <aside>
+            <h3>Our promise</h3>
+            <p style="color:var(--muted)">We focus on practical outcomes: projects you can show, short timelines, and mentor support.</p>
+
+            <div style="margin-top:1rem" class="price-grid">
+              <div class="price">
+                <h4>Free</h4>
+                <div style="color:var(--muted)">Access limited courses & community</div>
+                <a class="buy" href="#signup">Start Free</a>
+              </div>
+
+              <div class="price">
+                <h4>Pro — ₹999/month</h4>
+                <div style="color:var(--muted)">All courses, certificates & mentor hours</div>
+                <a class="buy" href="#signup">Get Pro</a>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="pricing" style="padding:1.5rem 0" aria-labelledby="pricing-title">
+        <h2 id="pricing-title">Pricing plans</h2>
+        <div class="grid" style="margin-top:1rem">
+          <article class="card price" aria-labelledby="p1">
+            <h3 id="p1">Starter</h3>
+            <div style="font-weight:800;font-size:1.2rem">Free</div>
+            <p style="color:var(--muted)">Community access, selected courses</p>
+            <ul style="color:var(--muted);margin-top:.5rem">
+              <li>Limited projects</li>
+              <li>Community forum</li>
+            </ul>
+            <a class="buy" href="#signup">Choose</a>
+          </article>
+
+          <article class="card price" aria-labelledby="p2">
+            <h3 id="p2">Pro</h3>
+            <div style="font-weight:800;font-size:1.2rem">₹999 / month</div>
+            <p style="color:var(--muted)">Full access, certificates, mentor support</p>
+            <ul style="color:var(--muted);margin-top:.5rem">
+              <li>All courses & projects</li>
+              <li>Mentor hours</li>
+              <li>Certificate of completion</li>
+            </ul>
+            <a class="buy" href="#signup">Choose</a>
+          </article>
+
+          <article class="card price" aria-labelledby="p3">
+            <h3 id="p3">Team</h3>
+            <div style="font-weight:800;font-size:1.2rem">Custom</div>
+            <p style="color:var(--muted)">Team onboarding & custom training</p>
+            <a class="buy" href="#contact">Contact Sales</a>
+          </article>
+        </div>
+      </section>
+
+      <section id="contact" style="padding:1.5rem 0" aria-labelledby="contact-title">
+        <h2 id="contact-title">Get in touch</h2>
+        <p style="color:var(--muted)">Questions about courses or pricing? Drop a message — we'll reply within 2 business days.</p>
+
+        <form class="contact" aria-label="Contact form">
+          <div>
+            <label for="fname">First name</label>
+            <input id="fname" name="fname" required placeholder="Your first name" />
+          </div>
+
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required placeholder="you@example.com" />
+          </div>
+
+          <div>
+            <label for="course">Interested course</label>
+            <select id="course" name="course">
+              <option>Full-Stack Web Development</option>
+              <option>Intro to Data Science</option>
+              <option>Practical Machine Learning</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="phone">Phone (optional)</label>
+            <input id="phone" name="phone" placeholder="+91 98765 43210" />
+          </div>
+
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Hi, I'd like to know about..." ></textarea>
+
+          <div class="submit">
+            <button type="submit" class="cta">Send message</button>
+          </div>
+        </form>
+      </section>
+
+    </main>
+
+    <footer class="site-footer">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap">
+        <div>
+          <div style="font-weight:800">Learnly</div>
+          <div style="color:var(--muted)">© <span id="year"></span> Learnly — All rights reserved.</div>
+        </div>
+
+        <div style="display:flex;gap:1rem;align-items:center">
+          <nav aria-label="Footer">
+            <a href="#privacy" style="color:var(--muted);text-decoration:none;margin-right:1rem">Privacy</a>
+            <a href="#terms" style="color:var(--muted);text-decoration:none">Terms</a>
+          </nav>
+          <div class="socials">
+            <a aria-label="Twitter" href="#">T</a>
+            <a aria-label="LinkedIn" href="#">in</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // small scripts: mobile menu toggle & year
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const toggle = document.querySelector('.mobile-toggle');
+    const nav = document.querySelector('.primary');
+    toggle && toggle.addEventListener('click', ()=>{
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+      if(!expanded){nav.style.display='flex'}else{nav.style.display='none'}
+    });
+
+    // Prevent actual form submission for demo
+    document.querySelectorAll('form').forEach(f=>f.addEventListener('submit', e=>{ e.preventDefault(); alert('Form submitted (demo) — integrate backend to make functional.'); }));
+  </script>
+</body>
+</html>
